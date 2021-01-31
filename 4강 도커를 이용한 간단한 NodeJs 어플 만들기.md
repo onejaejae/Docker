@@ -117,4 +117,61 @@ CMD [ "node", "index.js" ]
 
 -   그것과 비슷하게 네트워크도 로컬 네트워크에 있던 것을 컨테이너 내부에 있는 네트워크에 연결을 시켜줘야한다.
 
+### Working Directory 명시해주기
+
+```js
+WORKDIR /usr/src/app
+```
+
+-   이미지안에서 어플리케이션 소스코드를 갖고 있을 디렉토리를 생성하는 것이다.
+
+-   그리고 이 디렉토리가 어플리케이션에 working 디렉토리가 된다.
+
+🤷‍♂️ 그런데 왜 따로 working 디렉토리가 있어야 하는가?
+
+`docker run -it magicnc7/nodejs ls`를 찍어보면
+
+```js
+Dockerfile  dev   index.js  media         opt                proc  sbin  tmp
+bin         etc   lib       mnt           package-lock.json  root  srv   usr
+boot        home  lib64     node_modules  package.json       run   sys   var
+```
+
+🤦‍♀️ 이렇게 workdir를 지정하지 않고 그냥 COPY할때 생기는 문제점
+
+1. 혹시 이 중에서 원래 이미지에 있던 파일과 이름이 같다면?
+
+ex) 베이스 이미지에 이미 HOME이라는 폴더가 있고 COPY를 함으로써 새로 추가되는 폴더 중에 HOME이라는 폴더가 있다면 중복이 되므로 원래 있던 폴더가 덮어씌어져 버린다.
+
+2. 모든 파일이 한 디렉토리에 들어가버려 너무 정리 정돈이 안되있다.
+
+=> 그래서 모든 어플리케이션을 위한 소스들은 WORK 디렉토리를 따로 만들어서 보관한다.
+
+👊 만드는 방법
+
+```js
+# 베이스 이미지를 명시해준다.
+FROM node:10
+
+WORKDIR /usr/src/app
+
+COPY ./ ./ 
+
+# 추가적으로 필요한 파일들을 다운로드 받는다.
+RUN npm install
+
+# 컨테이너 시작 시 실행될 명령어를 명시해준다.
+CMD [ "node", "index.js" ]
+```
+
+📌 WORKDIR 설정 후 터미널에 들어오면 기본적으로 work 디렉토리에서 시작하게 됨 
+
+`docker run -it magicnc7/nodejs ls`
+
+```js
+Dockerfile  index.js  node_modules  package-lock.json  package.json
+```
+
+Root 디렉토리 확인하려면 
+명령어 cd/
 
