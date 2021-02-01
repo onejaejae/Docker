@@ -155,3 +155,22 @@ services:
 ✨ 이렇게 도커 컴포즈를 다 작성한 후에 도커 컴포즈를 이용해서 한번에 2개의 컨테이너를 동시에 실행해보자
 
 `docker-compose up`
+
+### Docker Compose로 컨테이너 멈추기
+
+- 도커 컴포즈를 통해 작동시킨 컨테이너들을 한꺼번에 중단시키려면 `docker compose down` 으로 할 수 있다.
+
+📌 docker-compose -d up
+
+-  `-d` detached 모드로서 앱을 백그라운드에서 실행시킨다. 그래서 앱에서 나오는 output을 표출하지 않는다.
+
+- `-d` 옵션을 주고 앱을 실행한다면 하나의 터미널에서 앱을 작동하고 멈출 수 있다.
+
+
+📌 docker-compose up vs docker-compose up --build
+
+1.  docker-compose up : 이미지가 없을 때 이미지를 생성하고 컨테이너 실행
+
+2.  docker-compose up --build : 이미지가 있든 없든 이미지를 생성하고 컨테이너 실행 (소스가 수정되었을 경우 사용)
+
+
