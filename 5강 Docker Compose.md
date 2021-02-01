@@ -78,3 +78,40 @@ app.listen(8000, () => console.log("Server is Running"));
 
 ```
 
+### Dockerfile 작성하기
+
+-   Nodejs를 위한 이미지를 만들기 위해서 Dockerfile을 작성하는 것이기에 저번에 nodejs 앱을 위한 Dockerfile과 똑같이 만들어 주면 된다.
+
+
+### Docker containers간 통신 할 때 나타나는 에러
+
+- 이제 어플리케이션 소스와 도커 파일까지 작성했으니 실제로 어플을 실행해보자.
+
+- 우선 어플이 어떤식으로 실행이 되는지 살펴보자.
+
+
+✔ 컨테이너(노드 JS앱 + redis 클라이언트) + 컨테이너(레디스 서버)
+
+🙌 실행 흐름
+
+- 레디스 클라이언트가 작동하려면 레디스 서버가 켜져있어야 하기 때문에 먼저 레디스 서버를 위한 컨테이너를 실행하고 노드 js를 위한 컨테이너를 실행해보자
+
+`docker build 도커아이디/앱이름 ./`
+
+`docker run  -d -p 5000:8000 이미지 이름` 
+
+🤦‍♂️ 그런데 !! 레디스 서버를 위한 컨테이너를 실행하고 노드 js를 위한 컨테이너를 실행하면 에러 발생
+
+``` 
+Error: Redis connection to redis-server:6379 failed - getaddrinfo ENOTFOUND redis-server redis-server:6379
+    at GetAddrInfoReqWrap.onlookup [as oncomplete] (dns.js:56:26)
+```
+
+📌 에러가 발생하는 이유
+
+- 서로 다른 컨테이너에 있는데 컨테이너 사이에는 아무런 설정 없이는 접근을 할 수 없기에 노드 JS앱에서 레디스 서버에 접근 할 수 없어서 에러 발생.
+
+😎 그러면 어떻게 컨테이너 사이에 통신을 할 수 있을까?
+
+- 멀티 컨테이너 상황에서 쉽게 네트워크를 연결 시켜주기 위해서 Docker Compose를 이용하면 된다.
+
