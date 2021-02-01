@@ -115,3 +115,43 @@ Error: Redis connection to redis-server:6379 failed - getaddrinfo ENOTFOUND redi
 
 - 멀티 컨테이너 상황에서 쉽게 네트워크를 연결 시켜주기 위해서 Docker Compose를 이용하면 된다.
 
+### 도커 Compose 파일 작성하기
+
+-  도커 compose가 컨테이너 사이에 네트워크를 연결시켜준다는 것을 알았다.
+
+- 그러면 본격적으로 도커 컴포즈 파일을 작성해보자
+
+🙋‍♂️ Docker Compose 파일은 yaml 파일인데 yaml이 무엇일까?
+
+    YAML ain`t markup language의 약자이며, 일반적으로 구성 파일 및 데이터가 저장되거나 전송되는 응용 프로그램에서 사용되고 원래는 XML이나 json 포맷으로 많이 쓰였지만, 좀 더 사람이 읽기 쉬운 포맷으로 나타낸게 yaml이다.
+
+
+📝 docker-compose.yaml 작성하기
+
+```js
+version: "3"
+services:
+  redis-server:
+    image: "redis"
+  node-app:
+    build: .
+    ports:
+      - "5000:8000"
+```
+  version => 도커 컴포즈의 버전
+
+  services => 이곳에 실행하려는 컨테이너들을 정의
+
+  redis-server => 컨테이너 이름
+
+  image => 컨테이너에서 사용하는 이미지
+
+  node-app => 컨테이너 이름
+
+  build => 현 디렉토리에 있는 Dockerfile 사용
+
+  ports => 포트 맵핑 로컬 포트 : 컨테이너 포트
+  
+✨ 이렇게 도커 컴포즈를 다 작성한 후에 도커 컴포즈를 이용해서 한번에 2개의 컨테이너를 동시에 실행해보자
+
+`docker-compose up`
